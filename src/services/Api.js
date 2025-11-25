@@ -11,7 +11,7 @@ const getApiBaseUrl = () => {
         return process.env.REACT_APP_API_URL;
     }
     
-    return 'https://theglitch.world';
+    return 'https://mindify.app'; // Update this with your actual domain
 };
 
 const API_BASE_URL = getApiBaseUrl();

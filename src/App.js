@@ -89,7 +89,7 @@ function AppRoutes() {
                     <Route path="/courses" element={<Courses />} />
                     <Route path="/my-courses" element={<MyCourses />} />
                     <Route path="/explore" element={<Explore />} />
-                    <Route path="/why-glitch" element={<WhyInfinity />} />
+                    <Route path="/why-mindify" element={<WhyInfinity />} />
                     <Route path="/contact" element={<ContactUs />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/profile/edit-name" element={<EditName />} />

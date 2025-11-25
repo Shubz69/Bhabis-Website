@@ -1104,7 +1104,7 @@ const Community = () => {
         }, 5000); // Increased from 3 to 5 seconds
 
         return () => clearInterval(pollInterval);
-    }, [selectedChannel?.id, isAuthenticated, isConnected, fetchMessages]);
+    }, [selectedChannel, isAuthenticated, isConnected, fetchMessages]);
     
     // Add welcome message when welcome channel is selected for first time
     useEffect(() => {
@@ -1116,7 +1116,7 @@ const Community = () => {
                 const welcomeMessage = {
                     id: 'welcome-message',
                     channelId: selectedChannel.id,
-                    content: `🎉 **WELCOME TO THE GLITCH COMMUNITY!** 🎉
+                    content: `🎉 **WELCOME TO THE MINDIFY COMMUNITY!** 🎉
 
 Welcome to the most elite trading and wealth-building community on the planet! We're thrilled to have you join us on this incredible journey toward financial freedom and generational wealth.
 

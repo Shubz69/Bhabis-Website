@@ -5,7 +5,14 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'your_stripe_k
 const path = require('path');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const sqlite3 = require('better-sqlite3');
+// Conditionally require better-sqlite3 (may not be available in all environments)
+let sqlite3;
+try {
+    sqlite3 = require('better-sqlite3');
+} catch (err) {
+    console.warn('better-sqlite3 not available, SQLite features disabled:', err.message);
+    sqlite3 = null;
+}
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -22,6 +29,9 @@ const transporter = nodemailer.createTransporter({
 // Database setup
 let db;
 try {
+  if (!sqlite3) {
+    throw new Error('better-sqlite3 not available');
+  }
   db = sqlite3('data.sqlite3');
   console.log('Connected to SQLite database');
   

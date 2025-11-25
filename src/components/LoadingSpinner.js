@@ -23,8 +23,8 @@ const LoadingSpinner = () => {
             
             {/* Main content */}
             <div className="loading-content">
-                <div className="loading-title">THE GLITCH</div>
-                <div className="loading-subtitle">WEALTH REVOLUTION</div>
+                <div className="loading-title">MINDIFY</div>
+                <div className="loading-subtitle">EMPOWERING MINDS</div>
                 
                 {/* Loading progress */}
                 <div className="loading-progress">

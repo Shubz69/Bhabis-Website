@@ -7,7 +7,7 @@ const GDPRModal = ({ onAgree }) => {
             <div className="gdpr-modal">
                 <h2>🔒 GDPR Privacy Notice</h2>
                 <p>
-                    THE GLITCH values your privacy. We collect and store your email,
+                    Mindify values your privacy. We collect and store your email,
                     chat messages, course progress, and usage patterns only for platform functionality.
                     Your data is stored securely and never shared with third parties.
                 </p>

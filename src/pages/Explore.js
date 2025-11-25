@@ -82,7 +82,7 @@ const Explore = () => {
       {/* Header */}
       <header className="explore-header">
         <h1 className="explore-title">
-          WELCOME TO <span className="highlight">THE GLITCH</span>
+          WELCOME TO <span className="highlight">MINDIFY</span>
         </h1>
         <p className="explore-subtitle">
           Build <span className="highlight">GENERATIONAL WEALTH</span> through our multiple streams of knowledge. Learn to make money work for you, avoid bad financial habits, and gain true financial freedom through disciplined education and smart investment strategies.
@@ -116,7 +116,7 @@ const Explore = () => {
           <div className="testimonial-card">
             <div className="quote-mark">"</div>
             <p>
-              The Glitch taught me to break free from bad spending habits and focus on building real wealth. I now have three passive income streams and my financial future looks completely different.
+              Mindify taught me to break free from bad spending habits and focus on building real wealth. I now have three passive income streams and my financial future looks completely different.
             </p>
             <div className="testimonial-author">
               <span className="author-name">Michael T.</span>
@@ -177,7 +177,7 @@ const Explore = () => {
           </div>
           <div className="feature-card">
             <div className="feature-icon">🌟</div>
-            <h3>The Glitch Advantage</h3>
+            <h3>The Mindify Advantage</h3>
             <p>Join a community committed to breaking traditional financial limitations and creating extraordinary wealth through smart, ethical strategies.</p>
           </div>
         </div>

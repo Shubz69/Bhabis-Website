@@ -24,8 +24,8 @@ const Chatbot = () => {
     useEffect(() => {
         if (isOpen) {
             const welcomeMessage = isAuthenticated 
-                ? `👋 Welcome back, ${user?.username || user?.name || 'there'}! I'm THE GLITCH AI assistant. I can answer any questions you have about trading, courses, your account, or anything else. Choose a question below or type your own!`
-                : "👋 Welcome to <span className='glitch-brand' data-text='THE GLITCH'>THE GLITCH</span>! I can answer questions about our website. <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>Sign up</a> or <a href='/login' style='color: #8B5CF6; text-decoration: underline;'>log in</a> to unlock full chatbot capabilities and ask me anything!\nChoose a question or type your own.";
+                ? `👋 Welcome back, ${user?.username || user?.name || 'there'}! I'm the Mindify AI assistant. I can answer any questions you have about courses, your account, or anything else. Choose a question below or type your own!`
+                : "👋 Welcome to Mindify! I can answer questions about our website. <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>Sign up</a> or <a href='/login' style='color: #8B5CF6; text-decoration: underline;'>log in</a> to unlock full chatbot capabilities and ask me anything!\nChoose a question or type your own.";
             
             setMessages([
                 {

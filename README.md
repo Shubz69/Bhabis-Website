@@ -1,6 +1,6 @@
-# Trading Platform Frontend
+# Mindify
 
-This is the frontend application for the Trading Platform. It provides a user-friendly interface for accessing courses, community channels, and trading resources.
+Mindify is a comprehensive platform that provides a user-friendly interface for accessing courses, community channels, and resources.
 
 ## Features
 
@@ -37,8 +37,8 @@ This is the frontend application for the Trading Platform. It provides a user-fr
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/username/trading-platform-frontend.git
-cd trading-platform-frontend
+git clone https://github.com/Shubz69/Bhabis-Website.git
+cd Bhabis-Website
 ```
 
 2. Install dependencies:
@@ -114,3 +114,7 @@ npm run build
 ## License
 
 This project is proprietary and not licensed for public use.
+
+## About
+
+Mindify - Your comprehensive learning and community platform.

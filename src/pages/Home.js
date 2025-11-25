@@ -107,7 +107,7 @@ const Home = () => {
                     <BinaryBackground />
                     {/* Main Loading Content */}
                     <div className="loading-content">
-                        <div className="loading-title">THE GLITCH</div>
+                        <div className="loading-title">MINDIFY</div>
                         <div className="loading-subtitle">INITIALIZING SYSTEM...</div>
                         
                         <div className="loading-dots-container">
@@ -137,7 +137,7 @@ const Home = () => {
                                 
                                 <h1 className="hero-title">
                                     <span className="title-line">WELCOME TO</span>
-                                    <span className="title-highlight">THE GLITCH</span>
+                                    <span className="title-highlight">MINDIFY</span>
                                     <span className="title-line">PLATFORM</span>
                                 </h1>
                                 
@@ -180,7 +180,7 @@ const Home = () => {
                         <div className="features-container">
                             <div className="features-header">
                                 <h2 className="section-title">Advanced Capabilities</h2>
-                                <p className="section-subtitle">Discover what makes THE GLITCH the most advanced trading platform</p>
+                                <p className="section-subtitle">Discover what makes Mindify the most advanced platform</p>
                             </div>
                             
                             <div className="features-showcase">
@@ -246,7 +246,7 @@ const Home = () => {
                         <div className="cta-container">
                             <div className="cta-content">
                                 <h2 className="cta-title">Ready to Experience the Future?</h2>
-                                <p className="cta-description">Join thousands of traders who trust THE GLITCH for their automated trading needs</p>
+                                <p className="cta-description">Join thousands of users who trust Mindify for their learning and growth needs</p>
                                 
                                 <div className="cta-actions">
                                     <button className="cta-primary" onClick={handleStartTrading}>

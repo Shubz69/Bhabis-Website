@@ -146,7 +146,7 @@ const WhyInfinity = () => {
                 <div className="why-logo">
                     <div className="logo-glow"></div>
                     <div className="logo-container">
-                        <h1 className="text-logo">Why The Glitch</h1>
+                        <h1 className="text-logo">Why Mindify</h1>
                     </div>
                 </div>
                 
@@ -165,14 +165,14 @@ const WhyInfinity = () => {
                     </div>
                 </div>
                 
-                <h1 className="why-heading">Why Choose The Glitch</h1>
+                <h1 className="why-heading">Why Choose Mindify</h1>
                 <div className="content-grid symmetrical-grid">
                     <div className="why-content symmetrical-left">
                         <div className={`paragraph-section ${visibleSections['section-1'] ? 'fade-in-up' : ''}`}
                             ref={el => sectionRefs.current.paragraphSections[0] = el}
                         >
                             <p className="why-paragraph">
-                                The Glitch is your pathway to building generational wealth and breaking free from 
+                                Mindify is your pathway to building generational wealth and breaking free from 
                                 destructive financial habits. We teach you how to make your money work for you through 
                                 multiple streams of knowledge—from smart investing to creating passive income.
                             </p>
@@ -288,7 +288,7 @@ const WhyInfinity = () => {
                             </div>
                             <h3>Smart Money Strategies</h3>
                             <p>
-                                Master the knowledge needed to build multiple income streams through trading, investing, and entrepreneurship on The Glitch platform.
+                                Master the knowledge needed to build multiple income streams through trading, investing, and entrepreneurship on the Mindify platform.
                             </p>
                         </div>
                         
@@ -328,7 +328,7 @@ const WhyInfinity = () => {
                             <div className="feature-card-icon">
                                 <FaUsers />
                             </div>
-                            <h3>The Glitch Community</h3>
+                            <h3>The Mindify Community</h3>
                             <p>
                                 Join like-minded individuals committed to breaking free from financial limitations and building generational wealth through smart, disciplined strategies.
                             </p>
