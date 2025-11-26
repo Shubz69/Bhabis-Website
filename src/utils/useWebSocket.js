@@ -125,7 +125,7 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
     
     // Only proceed if we haven't reached max attempts yet
     reconnectAttempts.current += 1;
-    console.log(`Reconnect attempt ${reconnectAttempts.current}/${maxReconnectAttempts}`);
+    // Suppress reconnect attempt logs
 
     // Clear any existing reconnection timeout
     if (reconnectTimeoutRef.current) {
@@ -156,7 +156,7 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
         // Set flags to prevent further attempts
         hasReachedMaxAttempts.current = true;
         wsDisabledRef.current = true;
-        console.warn('Max reconnect attempts reached. WebSocket unavailable. Using REST API polling instead.');
+        // Silent - WebSocket unavailable is expected, REST polling works fine
         return;
       }
       
@@ -203,7 +203,7 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
 
       // Only log if we haven't reached max attempts (to reduce spam)
       if (!hasReachedMaxAttempts.current) {
-        console.log(`Connecting to WebSocket at ${WS_BASE_URL}/ws`);
+        // Suppress connection attempt logs
       }
 
       // Clear any previous connection
@@ -285,7 +285,7 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
           return;
         }
         
-        console.log('WebSocket Connected:', frame);
+        // WebSocket connected - no logging needed
         setIsConnected(true);
         setConnectionError(null);
         reconnectAttempts.current = 0;
