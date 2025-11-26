@@ -254,12 +254,6 @@ const Community = () => {
             ];
 
             preparedChannels = essentialChannels;
-        } else {
-            preparedChannels = [
-                { id: 'welcome', name: 'welcome', displayName: 'Welcome', category: 'announcements', description: 'Welcome to the Mindify community!', accessLevel: 'open', locked: false },
-                { id: 'announcements', name: 'announcements', displayName: 'Announcements', category: 'announcements', description: 'Important platform announcements', accessLevel: 'admin-only', locked: true },
-                { id: 'general-chat', name: 'general-chat', displayName: 'General Chat', category: 'general', description: 'General trading discussion', accessLevel: 'open', locked: false }
-            ];
         }
 
         if (preparedChannels.length === 0) {
