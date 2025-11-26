@@ -44,7 +44,7 @@ const getDbConnection = async () => {
     // Test the connection
     await connection.ping();
     
-    // Create users table if it doesn't exist
+    // Create users table if it doesn't exist (with only essential columns)
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -166,10 +166,10 @@ module.exports = async (req, res) => {
       const SUPER_ADMIN_EMAIL = 'shubzfx@gmail.com';
       const userRole = emailLower === SUPER_ADMIN_EMAIL.toLowerCase() ? 'SUPER_ADMIN' : 'USER';
 
-      // Insert new user
+      // Insert new user - only use columns that exist in the table
       const [result] = await db.execute(
-        'INSERT INTO users (username, email, password, name, avatar, role, muted, mfa_verified, dtype) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [usernameLower, emailLower, hashedPassword, name || username, avatar || '/avatars/avatar_ai.png', userRole, 0, 0, 'UserModel']
+        'INSERT INTO users (username, email, password, name, avatar, role) VALUES (?, ?, ?, ?, ?, ?)',
+        [usernameLower, emailLower, hashedPassword, name || username, avatar || '/avatars/avatar_ai.png', userRole]
       );
 
       const userId = result.insertId;
