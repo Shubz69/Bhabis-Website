@@ -902,7 +902,11 @@ const Community = () => {
             checkApiConnectivity().then((apiWorking) => {
                 if (apiWorking) {
                     refreshChannelList().catch((err) => {
-                        console.warn('Failed to refresh channel list:', err.message);
+                        // Suppress expected errors to reduce console noise
+                        // Only log if it's a server error (not network timeout)
+                        if (err.response && err.response.status >= 500) {
+                            console.warn('Failed to refresh channel list:', err.message);
+                        }
                     });
                 }
             });

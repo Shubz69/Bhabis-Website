@@ -51,6 +51,7 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
   const wsDisabledRef = useRef(false); // Use ref for immediate updates (no async state delay)
   const reconnectTimeoutRef = useRef(null);
   const hasLoggedSkipRef = useRef(false);
+  const hasLoggedFirstErrorRef = useRef(false);
 
   const preferNativeSocket = useCallback(() => {
     // Try native WebSocket first - Railway should support direct WebSocket connections
@@ -99,20 +100,11 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
       hasReachedMaxAttempts.current = true;
       wsDisabledRef.current = true;
       
-      console.warn('Max reconnect attempts reached. WebSocket unavailable. Using REST API polling instead.');
-      console.warn(`WebSocket server at ${WS_BASE_URL}/ws is not accessible.`);
-      console.warn('');
-      console.warn('🔧 RAILWAY SERVER CONFIGURATION REQUIRED:');
-      console.warn('The Railway service is returning HTTP 200 instead of 101 Switching Protocols.');
-      console.warn('This means the server is not handling WebSocket upgrades properly.');
-      console.warn('');
-      console.warn('To fix this on Railway:');
-      console.warn('1. Ensure your WebSocket server listens on Railway\'s PORT environment variable');
-      console.warn('2. Verify the server properly handles WebSocket upgrade requests (HTTP 101)');
-      console.warn('3. Check Railway service logs for WebSocket-related errors');
-      console.warn('4. Ensure the server code uses proper WebSocket upgrade logic');
-      console.warn('');
-      console.warn('Messages will continue to update via REST API polling every 5 seconds.');
+      // Only log once when max attempts are reached
+      if (!hasLoggedFirstErrorRef.current) {
+        hasLoggedFirstErrorRef.current = true;
+        console.warn('WebSocket unavailable. Using REST API polling instead.');
+      }
       setConnectionError(null);
       
       // Clear any pending reconnection timeout IMMEDIATELY
@@ -174,7 +166,7 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
       // Final check before logging and calling connect
       // Only proceed if we haven't reached max attempts yet
       if (!wsDisabledRef.current && !hasReachedMaxAttempts.current && reconnectAttempts.current < maxReconnectAttempts) {
-        console.log('Attempting to reconnect...');
+        // Suppress reconnect attempt logs to reduce console noise
         // Final check before calling connect
         if (!wsDisabledRef.current && !hasReachedMaxAttempts.current && typeof connectRef.current === 'function') {
           connectRef.current();
@@ -199,17 +191,7 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
     
     // Skip connection if not authenticated or missing channelId or shouldConnect is false
     if (!enableConnection || !isAuthenticated || !token || !channelId) {
-      if (!enableConnection && !hasLoggedDisabledRef.current) {
-        console.info('WebSocket connections disabled for this environment.');
-        hasLoggedDisabledRef.current = true;
-      } else if ((!isAuthenticated || !token || !channelId) && !hasLoggedSkipRef.current) {
-        // Only log once to avoid spam
-        hasLoggedSkipRef.current = true;
-        // Reset the flag after a delay so it can log again if conditions change
-        setTimeout(() => {
-          hasLoggedSkipRef.current = false;
-        }, 5000);
-      }
+      // Suppress all connection skip logs to reduce console noise
       return;
     }
     
@@ -384,19 +366,12 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
           ? 'Cannot connect to server. Server may be unavailable.'
           : (error.message || 'Connection failed');
 
-        // Only log detailed error on first attempt to help diagnose
-        if (reconnectAttempts.current === 0 && !hasReachedMaxAttempts.current && !wsDisabledRef.current) {
-          console.error('WebSocket Error:', error);
-          console.error(`Failed to connect to: ${WS_BASE_URL}/ws`);
-          console.error('This usually means:');
-          console.error('1. Railway WebSocket service is down or not running');
-          console.error('2. The WebSocket endpoint URL is incorrect');
-          console.error('3. Network/CORS/firewall issues');
-          console.error('Please check your Railway dashboard to ensure the WebSocket service is running.');
-        } else if (!hasReachedMaxAttempts.current && !wsDisabledRef.current) {
-          // Less verbose for subsequent attempts
-          console.error('WebSocket Error:', errorMessage);
+        // Only log detailed error on first attempt to help diagnose, then suppress
+        if (reconnectAttempts.current === 0 && !hasReachedMaxAttempts.current && !wsDisabledRef.current && !hasLoggedFirstErrorRef.current) {
+          hasLoggedFirstErrorRef.current = true;
+          console.warn('WebSocket connection unavailable. Falling back to REST API polling.');
         }
+        // Suppress all subsequent error logs
         setConnectionError(`WebSocket Error: ${errorMessage}`);
         setIsConnected(false);
         
@@ -409,10 +384,7 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
       };
 
       client.onDisconnect = () => {
-        // Only log if we haven't reached max attempts (to reduce spam)
-        if (!hasReachedMaxAttempts.current && !wsDisabledRef.current) {
-          console.log('WebSocket Disconnected');
-        }
+        // Suppress disconnect logs to reduce console noise
         setIsConnected(false);
       };
 

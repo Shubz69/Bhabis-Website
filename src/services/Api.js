@@ -247,7 +247,6 @@ const Api = {
     
     // Community/Channels
     getChannels: async (customHeaders = {}) => {
-        console.log('Attempting to fetch channels from:', `${API_BASE_URL}/api/community/channels`);
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(`${API_BASE_URL}/api/community/channels`, {
@@ -258,7 +257,10 @@ const Api = {
             });
             return response;
         } catch (error) {
-            console.error('Error fetching channels:', error);
+            // Only log if it's not a network error (expected during offline)
+            if (error.response) {
+                console.error('Error fetching channels:', error.response.status, error.response.data?.message || error.message);
+            }
             throw error;
         }
     },
@@ -298,7 +300,6 @@ const Api = {
     },
 
     getChannelMessages: async (channelId, customHeaders = {}) => {
-        console.log(`Attempting to fetch messages for channel ${channelId}`);
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(`${API_BASE_URL}/api/community/channels/${channelId}/messages`, {
@@ -309,7 +310,10 @@ const Api = {
             });
             return response;
         } catch (error) {
-            console.error(`Error fetching messages for channel ${channelId}:`, error);
+            // Only log if it's not a network error (expected during offline)
+            if (error.response) {
+                console.error(`Error fetching messages for channel ${channelId}:`, error.response.status, error.response.data?.message || error.message);
+            }
             throw error;
         }
     },
