@@ -191,14 +191,11 @@ const Community = () => {
                             locked: channel.locked ?? accessLevelValue === 'admin-only'
                         };
                     });
-                            setChannelList(sortChannels(preparedCached));
-                        }
-                    }
-                } catch (cacheError) {
-                    console.warn('Error loading cached channels:', cacheError);
+                    setChannelList(sortChannels(preparedCached));
                 }
             }
-        }
+        } catch (cacheError) {
+            console.warn('Error loading cached channels:', cacheError);
         }
 
         let channelsFromServer = [];
@@ -688,8 +685,8 @@ const Community = () => {
             // Remove from current channel list immediately (optimistic update)
             setChannelList(prev => prev.filter(c => c.id !== channel.id));
 
-            // Force refresh the channel list from server (bypass cache)
-            await refreshChannelList({ forceRefresh: true });
+            // Force refresh the channel list from server
+            await refreshChannelList();
 
             setChannelActionStatus({ type: 'success', message: 'Channel deleted successfully.' });
         } catch (error) {
