@@ -162,10 +162,14 @@ module.exports = async (req, res) => {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+      // Determine user role - Super Admin for shubzfx@gmail.com
+      const SUPER_ADMIN_EMAIL = 'shubzfx@gmail.com';
+      const userRole = emailLower === SUPER_ADMIN_EMAIL.toLowerCase() ? 'SUPER_ADMIN' : 'USER';
+
       // Insert new user
       const [result] = await db.execute(
         'INSERT INTO users (username, email, password, name, avatar, role, muted, mfa_verified, dtype) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [usernameLower, emailLower, hashedPassword, name || username, avatar || '/avatars/avatar_ai.png', 'USER', 0, 0, 'UserModel']
+        [usernameLower, emailLower, hashedPassword, name || username, avatar || '/avatars/avatar_ai.png', userRole, 0, 0, 'UserModel']
       );
 
       const userId = result.insertId;
@@ -184,7 +188,7 @@ module.exports = async (req, res) => {
         id: userId,
         email: emailLower,
         username: usernameLower,
-        role: 'USER',
+        role: userRole,
         exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
       }));
       const signature = toBase64Url('signature-' + Date.now());
@@ -201,7 +205,7 @@ module.exports = async (req, res) => {
         email: emailLower,
         name: name || username,
         avatar: avatar || '/avatars/avatar_ai.png',
-        role: 'USER',
+        role: userRole,
         token: token,
         status: 'SUCCESS'
       });
