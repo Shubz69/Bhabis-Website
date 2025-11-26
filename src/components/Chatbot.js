@@ -141,7 +141,7 @@ const Chatbot = () => {
             
             // Pricing
             if (msg.includes("price") || msg.includes("cost")) {
-                return "Our courses range from free to premium. Visit our <a href='/courses' style='color: #8B5CF6; text-decoration: underline;'>Courses page</a> to see pricing. <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>Create an account</a> to get started!";
+                return "We offer various features and community access. <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>Create an account</a> to get started!";
             }
             
             // Sign up/Login

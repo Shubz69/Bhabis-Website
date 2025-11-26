@@ -253,7 +253,7 @@ const Community = () => {
                 { id: 'general-chat', name: 'general-chat', displayName: 'General Chat', category: 'trading', description: 'General trading discussion', accessLevel: 'open', locked: false }
             ];
 
-            preparedChannels = [...essentialChannels, ...courseChannels];
+            preparedChannels = essentialChannels;
         } else {
             preparedChannels = [
                 { id: 'welcome', name: 'welcome', displayName: 'Welcome', category: 'announcements', description: 'Welcome to the Mindify community!', accessLevel: 'open', locked: false },
