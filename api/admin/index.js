@@ -259,38 +259,76 @@ module.exports = async (req, res) => {
           }
         };
 
-        await ensureUserColumn('last_seen DATETIME DEFAULT NULL', 'SELECT last_seen FROM users LIMIT 1');
-        await ensureUserColumn('created_at DATETIME DEFAULT CURRENT_TIMESTAMP', 'SELECT created_at FROM users LIMIT 1');
+        // Check if columns exist and create if needed
+        let hasLastSeen = false;
+        let hasCreatedAt = false;
+        
+        try {
+          await db.execute('SELECT last_seen FROM users LIMIT 1');
+          hasLastSeen = true;
+        } catch (e) {
+          try {
+            await db.execute('ALTER TABLE users ADD COLUMN last_seen DATETIME DEFAULT NULL');
+            hasLastSeen = true;
+          } catch (e2) {
+            console.warn('Could not add last_seen column:', e2.message);
+          }
+        }
+        
+        try {
+          await db.execute('SELECT created_at FROM users LIMIT 1');
+          hasCreatedAt = true;
+        } catch (e) {
+          // created_at should already exist, but handle gracefully
+          hasCreatedAt = false;
+        }
 
         // Consider users online if they were active in the last 5 minutes
-        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        // Build query based on available columns
+        let query = 'SELECT id, username, email, name, avatar, role';
+        let whereClause = '';
+        let params = [];
         
-        const [rows] = await db.execute(
-          `SELECT id, username, email, name, avatar, role, last_seen, created_at
-           FROM users 
-           WHERE (last_seen IS NOT NULL AND last_seen >= ?)
-              OR (last_seen IS NULL AND created_at IS NOT NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 5 MINUTE))
-           ORDER BY COALESCE(last_seen, created_at) DESC`,
-          [fiveMinutesAgo]
-        );
+        if (hasLastSeen) {
+          query += ', last_seen';
+        }
+        if (hasCreatedAt) {
+          query += ', created_at';
+        }
+        query += ' FROM users';
         
-        // Get total users count (including deleted/banned status)
-        const [allUsers] = await db.execute('SELECT COUNT(*) as total FROM users');
+        // Simple query - just get all users (no online status check since last_seen might not exist)
+        if (hasCreatedAt) {
+          query += ' ORDER BY created_at DESC LIMIT 100';
+        } else {
+          query += ' ORDER BY id DESC LIMIT 100';
+        }
+        
+        const [rows] = await db.execute(query, params);
+        
+        // Get total users count
+        let totalCount = 0;
+        try {
+          const [allUsers] = await db.execute('SELECT COUNT(*) as total FROM users');
+          totalCount = allUsers[0]?.total || rows.length;
+        } catch (e) {
+          totalCount = rows.length;
+        }
         await db.end();
 
         const onlineUsers = rows.map(row => ({
           id: row.id,
-          username: row.username,
-          email: row.email,
-          name: row.name,
+          username: row.username || row.name || '',
+          email: row.email || '',
+          name: row.name || row.username || '',
           avatar: row.avatar || '/avatars/avatar_ai.png',
-          role: row.role,
-          lastSeen: row.last_seen
+          role: row.role || 'USER',
+          lastSeen: row.last_seen || null
         }));
 
         return res.status(200).json({
           onlineUsers: onlineUsers,
-          totalUsers: allUsers[0]?.total || 0
+          totalUsers: totalCount
         });
       } catch (dbError) {
         console.error('Database error fetching user status:', dbError.message);

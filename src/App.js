@@ -10,10 +10,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AdminUserList from './pages/AdminUserList';
 import Home from './pages/Home';
-import Courses from './pages/Courses';
-import MyCourses from './pages/MyCourses';
 import Community from './pages/Community';
-import Explore from './pages/Explore';
 import WhyInfinity from './pages/WhyInfinity';
 import ContactUs from './pages/ContactUs';
 import NotFound from './pages/NotFound';
@@ -86,9 +83,6 @@ function AppRoutes() {
                     <Route path="/signup" element={<SignUp />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
-                    <Route path="/courses" element={<Courses />} />
-                    <Route path="/my-courses" element={<MyCourses />} />
-                    <Route path="/explore" element={<Explore />} />
                     <Route path="/why-mindify" element={<WhyInfinity />} />
                     <Route path="/contact" element={<ContactUs />} />
                     <Route path="/profile" element={<Profile />} />

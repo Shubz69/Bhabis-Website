@@ -226,15 +226,7 @@ const Api = {
         );
     },
     
-    // Courses
-    getCourses: async () => {
-        console.log('Fetching courses from live API:', `${API_BASE_URL}/api/courses`);
-        return await axios.get(`${API_BASE_URL}/api/courses`);
-    },
-    
-    getCourseById: (id) => {
-        return axios.get(`${API_BASE_URL}/api/courses/${id}`);
-    },
+    // Courses removed - no longer used
     
     // Admin APIs
     getAllUsers: () => {

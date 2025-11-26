@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Navbar.css";
 import "../styles/UserDropdown.css";
-import { FaUserCircle, FaSignOutAlt, FaBook, FaTrophy, FaCog, FaHeadset, FaBars, FaTimes, FaEnvelope, FaSlidersH } from 'react-icons/fa';
+import { FaUserCircle, FaSignOutAlt, FaTrophy, FaCog, FaHeadset, FaBars, FaTimes, FaEnvelope, FaSlidersH } from 'react-icons/fa';
 import { isSuperAdmin, isAdmin } from '../utils/roles';
 
 const Navbar = () => {
@@ -63,9 +63,6 @@ const Navbar = () => {
                                 </Link>
                                 <Link to="/profile" className="dropdown-item">
                                     <FaUserCircle className="dropdown-icon" /> Profile
-                                </Link>
-                                <Link to="/my-courses" className="dropdown-item">
-                                    <FaBook className="dropdown-icon" /> My Courses
                                 </Link>
 
                                 <Link to="/leaderboard" className="dropdown-item">
