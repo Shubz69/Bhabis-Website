@@ -5,30 +5,34 @@ import { useAuth } from '../context/AuthContext';
 
 // Define a fixed API base URL with proper fallback
 const resolveWebSocketBaseUrl = () => {
+  // First check environment variable
   if (typeof process !== 'undefined' && process.env?.REACT_APP_WS_URL) {
     const configured = process.env.REACT_APP_WS_URL;
-    if (configured === 'window-origin') {
+    if (configured === 'window-origin' || configured === 'same-origin') {
       if (typeof window !== 'undefined' && window.location?.origin) {
         return window.location.origin;
       }
-    } else if (configured) {
+    } else if (configured && configured !== 'false' && configured !== 'disabled') {
       return configured;
     }
   }
 
-  if (typeof window !== 'undefined') {
-    const { origin, hostname } = window.location ?? {};
-
+  // Use same origin for WebSocket (Vercel API routes)
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    const { origin, hostname } = window.location;
+    
+    // For localhost, use same origin
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       return origin;
     }
-
-    // Production fallback when env var is missing
-    if (hostname && hostname.includes('mindify.app')) {
-      return process.env.REACT_APP_WS_URL || 'https://mindify-realtime.up.railway.app';
-    }
+    
+    // For production (Vercel), try same origin first
+    // Vercel doesn't support WebSockets natively, but we can try
+    // If it fails, REST polling will be used
+    return origin;
   }
 
+  // Fallback to Railway WebSocket service only if explicitly configured
   return process.env.REACT_APP_WS_URL || 'https://mindify-realtime.up.railway.app';
 };
 
@@ -363,11 +367,9 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
           ? 'Cannot connect to server. Server may be unavailable.'
           : (error.message || 'Connection failed');
 
-        // Suppress all WebSocket error logs - fallback to REST polling works fine
-        // Only log once on the very first attempt if we haven't logged yet
-        // Completely suppress all WebSocket errors - REST API polling works fine
-        // This is expected behavior, no logging needed
-        setConnectionError(`WebSocket Error: ${errorMessage}`);
+        // Clear connection error - REST polling will handle messaging
+        // Don't show error to user, REST polling works fine
+        setConnectionError(null);
         setIsConnected(false);
         
         // Only attempt reconnection if we haven't reached max attempts and WebSocket is not disabled
