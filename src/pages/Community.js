@@ -1099,9 +1099,9 @@ Welcome to the most elite trading and wealth-building community on the planet! W
    • Do not promote other trading services or products
    • Keep discussions focused on learning and community growth
 
-**5. Course Access**
-   • Course-specific channels are for enrolled members only
-   • Share insights and ask questions in any channel
+**5. Channel Access**
+   • Join and participate in any open channels
+   • Create new channels to start discussions
    • Engage with the community to build knowledge together
 
 **6. Community Support**
