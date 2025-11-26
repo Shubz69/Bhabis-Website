@@ -37,8 +37,8 @@ Mindify is a comprehensive platform that provides a user-friendly interface for 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Shubz69/Bhabis-Website.git
-cd Bhabis-Website
+git clone https://github.com/username/trading-platform-frontend.git
+cd trading-platform-frontend
 ```
 
 2. Install dependencies:
@@ -114,7 +114,3 @@ npm run build
 ## License
 
 This project is proprietary and not licensed for public use.
-
-## About
-
-Mindify - Your comprehensive learning and community platform.

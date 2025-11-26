@@ -52,7 +52,7 @@ const Chatbot = () => {
             // Try to use the live API first
             const API_BASE_URL = (typeof window !== 'undefined' && window.location?.origin)
                 ? window.location.origin
-                : (process.env.REACT_APP_API_URL || 'https://theglitch.world');
+                : (process.env.REACT_APP_API_URL || 'https://mindify.app');
             const token = localStorage.getItem('token');
             
             // Prepare headers - include auth token if user is logged in
@@ -126,12 +126,12 @@ const Chatbot = () => {
         if (!isAuthenticated) {
             // Greetings
             if (msg.includes("hello") || msg.includes("hi ") || msg.includes("hey") || msg.match(/^hi$/) || msg.match(/^hey$/)) {
-                return "Hello! Welcome to THE GLITCH! 👋 I can answer questions about our website. <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>Sign up</a> or <a href='/login' style='color: #8B5CF6; text-decoration: underline;'>log in</a> to unlock full chatbot capabilities and ask me anything!";
+                return "Hello! Welcome to Mindify! 👋 I can answer questions about our website. <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>Sign up</a> or <a href='/login' style='color: #8B5CF6; text-decoration: underline;'>log in</a> to unlock full chatbot capabilities and ask me anything!";
             }
             
             // Simple website info
-            if (msg.includes("what") && (msg.includes("glitch") || msg.includes("platform") || msg.includes("website"))) {
-                return "THE GLITCH is a trading education platform focused on building generational wealth through 8 wealth domains: Health & Fitness, E-Commerce, Forex, Crypto, Algorithmic FX, Intelligent Systems, Social Media, and Real Estate. <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>Sign up</a> to access our courses and community!";
+            if (msg.includes("what") && (msg.includes("mindify") || msg.includes("platform") || msg.includes("website"))) {
+                return "Mindify is a platform focused on building generational wealth through 8 wealth domains: Health & Fitness, E-Commerce, Forex, Crypto, Algorithmic FX, Intelligent Systems, Social Media, and Real Estate. <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>Sign up</a> to access our courses and community!";
             }
             
             // Courses info
@@ -155,13 +155,13 @@ const Chatbot = () => {
             }
             
             // Default for non-logged in users
-            return "I can help with basic questions about THE GLITCH website. For advanced questions and personalized assistance, please <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>sign up</a> or <a href='/login' style='color: #8B5CF6; text-decoration: underline;'>log in</a> to unlock full chatbot capabilities!";
+            return "I can help with basic questions about Mindify. For advanced questions and personalized assistance, please <a href='/register' style='color: #8B5CF6; text-decoration: underline;'>sign up</a> or <a href='/login' style='color: #8B5CF6; text-decoration: underline;'>log in</a> to unlock full chatbot capabilities!";
         }
         
         // If logged in, provide full responses - answer ANY question
         // Greetings
         if (msg.includes("hello") || msg.includes("hi ") || msg.includes("hey") || msg.match(/^hi$/) || msg.match(/^hey$/)) {
-            return `Hello ${user?.username || user?.name || 'there'}! 👋 I'm THE GLITCH AI assistant. I can help you with any questions about trading, courses, your account, or anything else. What would you like to know?`;
+            return `Hello ${user?.username || user?.name || 'there'}! 👋 I'm the Mindify AI assistant. I can help you with any questions about courses, your account, or anything else. What would you like to know?`;
         }
         
         // Course related queries
@@ -191,7 +191,7 @@ const Chatbot = () => {
         
         // Platform features
         if (msg.includes("feature") || msg.includes("tool") || msg.includes("function")) {
-            return "THE GLITCH provides educational resources across 8 wealth domains: Health & Fitness, E-Commerce, Forex, Crypto, Algorithmic FX, Intelligent Systems, Social Media, and Real Estate. Our platform focuses on helping you build generational wealth through multiple income streams.";
+            return "Mindify provides educational resources across 8 wealth domains: Health & Fitness, E-Commerce, Forex, Crypto, Algorithmic FX, Intelligent Systems, Social Media, and Real Estate. Our platform focuses on helping you build generational wealth through multiple income streams.";
         }
         
         // Community related
@@ -211,7 +211,7 @@ const Chatbot = () => {
         
         // About the platform
         if (msg.includes("about") || msg.includes("what") || msg.includes("how") || msg.includes("platform")) {
-            return "THE GLITCH is your pathway to building generational wealth through multiple streams of knowledge. We teach you to make money work for you, break bad financial habits, and create lasting prosperity across 8 powerful domains.";
+            return "Mindify is your pathway to building generational wealth through multiple streams of knowledge. We teach you to make money work for you, break bad financial habits, and create lasting prosperity across 8 powerful domains.";
         }
         
         // Generational wealth questions
@@ -260,7 +260,7 @@ const Chatbot = () => {
             "What payment methods are accepted?",
         ],
         "💬 Community": [
-            "What's the THE GLITCH community?",
+            "What's the Mindify community?",
             "How do I unlock new chat channels?",
             "Is the community moderated?",
             "Can free users access the chatroom?",
@@ -281,7 +281,7 @@ const Chatbot = () => {
             {isOpen && (
                 <div className="chatbot-window">
                     <div className="chatbot-header">
-                        THE GLITCH Chat
+                        Mindify Chat
                         {connectError && <span className="offline-indicator">⚠️ Offline Mode</span>}
                         <button className="chatbot-close" onClick={toggleChat}>✕</button>
                     </div>

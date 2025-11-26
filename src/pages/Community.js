@@ -265,7 +265,7 @@ const Community = () => {
             });
 
             const essentialChannels = [
-                { id: 'welcome', name: 'welcome', displayName: 'Welcome', category: 'announcements', description: 'Welcome to THE GLITCH community!', accessLevel: 'open', locked: false },
+                { id: 'welcome', name: 'welcome', displayName: 'Welcome', category: 'announcements', description: 'Welcome to the Mindify community!', accessLevel: 'open', locked: false },
                 { id: 'announcements', name: 'announcements', displayName: 'Announcements', category: 'announcements', description: 'Important platform announcements', accessLevel: 'admin-only', locked: true },
                 { id: 'general-chat', name: 'general-chat', displayName: 'General Chat', category: 'trading', description: 'General trading discussion', accessLevel: 'open', locked: false }
             ];
@@ -273,7 +273,7 @@ const Community = () => {
             preparedChannels = [...essentialChannels, ...courseChannels];
         } else {
             preparedChannels = [
-                { id: 'welcome', name: 'welcome', displayName: 'Welcome', category: 'announcements', description: 'Welcome to THE GLITCH community!', accessLevel: 'open', locked: false },
+                { id: 'welcome', name: 'welcome', displayName: 'Welcome', category: 'announcements', description: 'Welcome to the Mindify community!', accessLevel: 'open', locked: false },
                 { id: 'announcements', name: 'announcements', displayName: 'Announcements', category: 'announcements', description: 'Important platform announcements', accessLevel: 'admin-only', locked: true },
                 { id: 'general-chat', name: 'general-chat', displayName: 'General Chat', category: 'general', description: 'General trading discussion', accessLevel: 'open', locked: false }
             ];
@@ -1188,7 +1188,7 @@ Click the ✅ below to acknowledge you've read and agree to follow these rules, 
 Let's build generational wealth together! 💰🚀`,
                     sender: {
                         id: 'system',
-                        username: 'THE GLITCH',
+                        username: 'Mindify',
                         avatar: '/avatars/avatar_ai.png',
                         role: 'admin'
                     },
@@ -2197,7 +2197,7 @@ Let's build generational wealth together! 💰🚀`,
                     </>
                 ) : (
                     <div className="no-channel-selected">
-                        <h2>Welcome to The Glitch Community</h2>
+                        <h2>Welcome to the Mindify Community</h2>
                         <p>Select a channel to start chatting</p>
                     </div>
                 )}

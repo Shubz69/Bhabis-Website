@@ -45,13 +45,9 @@ MySQL DB/
 # Other
 server.js.backup
 
-# Backup directories (may contain sensitive data)
-complete-backup/
+# Backup directories
 backend-backup/
-
-# Configuration files with secrets
-**/application.properties
-*.properties
+complete-backup/
 
 # Exclude everything outside project directory
 ../*

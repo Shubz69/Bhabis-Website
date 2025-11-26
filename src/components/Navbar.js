@@ -34,11 +34,8 @@ const Navbar = () => {
             <ul className={`nav-links ${mobileMenuOpen ? 'show' : ''}`}>
                 {!user && <li><Link to="/">Home</Link></li>}
                 {user && <li><Link to="/community">Community</Link></li>}
-                <li><Link to="/courses">Courses</Link></li>
-                {!user && <li><Link to="/explore">Explore</Link></li>}
                 {!user && <li><Link to="/why-mindify">Why Mindify</Link></li>}
                 <li><Link to="/contact">Contact Us</Link></li>
-                {user && <li><Link to="/leaderboard">Leaderboard</Link></li>}
                 {(isAdmin(user) || isSuperAdmin(user)) && (
                     <>
                         <li><Link to="/admin">Admin Panel</Link></li>
@@ -101,12 +98,9 @@ const Navbar = () => {
                 <ul className="mobile-nav-links">
                     {!user && <li><Link to="/" onClick={toggleMobileMenu}>Home</Link></li>}
                     {user && <li><Link to="/community" onClick={toggleMobileMenu}>Community</Link></li>}
-                    <li><Link to="/courses" onClick={toggleMobileMenu}>Courses</Link></li>
-                    {!user && <li><Link to="/explore" onClick={toggleMobileMenu}>Explore</Link></li>}
-                    {!user && <li><Link to="/why-glitch" onClick={toggleMobileMenu}>Why Glitch</Link></li>}
+                    {!user && <li><Link to="/why-mindify" onClick={toggleMobileMenu}>Why Mindify</Link></li>}
                     <li><Link to="/contact" onClick={toggleMobileMenu}>Contact Us</Link></li>
-                    {user && <li><Link to="/leaderboard" onClick={toggleMobileMenu}>Leaderboard</Link></li>}
-                    {user?.role?.toUpperCase() === "ADMIN" && (
+                    {(isAdmin(user) || isSuperAdmin(user)) && (
                         <>
                             <li><Link to="/admin" onClick={toggleMobileMenu}>Admin Panel</Link></li>
                             <li><Link to="/admin/messages" onClick={toggleMobileMenu}><FaHeadset className="dropdown-icon" /> Contact Submissions</Link></li>

@@ -9,13 +9,26 @@ const createEmailTransporter = () => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER.trim(),
-        pass: process.env.EMAIL_PASS.trim()
-      }
-    });
+    // Support any SMTP service - use EMAIL_HOST if provided, otherwise default to Gmail
+    const emailConfig = process.env.EMAIL_HOST
+      ? {
+          host: process.env.EMAIL_HOST,
+          port: process.env.EMAIL_PORT ? parseInt(process.env.EMAIL_PORT, 10) : 587,
+          secure: process.env.EMAIL_SECURE === 'true',
+          auth: {
+            user: process.env.EMAIL_USER.trim(),
+            pass: process.env.EMAIL_PASS.trim()
+          }
+        }
+      : {
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL_USER.trim(),
+            pass: process.env.EMAIL_PASS.trim()
+          }
+        };
+
+    const transporter = nodemailer.createTransport(emailConfig);
     return transporter;
   } catch (error) {
     console.error('Failed to create email transporter:', error);
@@ -145,10 +158,10 @@ module.exports = async (req, res) => {
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: emailLower,
-        subject: 'THE GLITCH - MFA Verification Code',
+        subject: 'Mindify - MFA Verification Code',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #8B5CF6;">THE GLITCH - MFA Verification</h2>
+            <h2 style="color: #8B5CF6;">Mindify - MFA Verification</h2>
             <p>Your MFA verification code is:</p>
             <div style="background: #1a0f2e; color: #8B5CF6; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 5px; margin: 20px 0; border-radius: 8px;">
               ${mfaCode}

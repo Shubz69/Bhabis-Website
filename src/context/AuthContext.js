@@ -328,7 +328,7 @@ export const AuthProvider = ({ children }) => {
   const sendWelcomeMessage = (userId, email) => {
     const welcomeMessage = {
       id: Date.now(),
-      text: `Welcome to THE GLITCH platform, ${email}! 🎉 We're excited to have you join our community. Our admin team is here to help you get started and answer any questions you might have. Feel free to reach out anytime!`,
+      text: `Welcome to Mindify, ${email}! 🎉 We're excited to have you join our community. Our admin team is here to help you get started and answer any questions you might have. Feel free to reach out anytime!`,
       sender: 'admin',
       timestamp: new Date().toISOString(),
       read: false

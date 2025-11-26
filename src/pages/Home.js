@@ -156,10 +156,6 @@ const Home = () => {
                                         <div className="button-particles"></div>
                                         <div className="button-glow"></div>
                                     </button>
-                                    <button className="secondary-button" onClick={() => navigate("/explore")}>
-                                        <span className="button-text">Explore Features</span>
-                                        <span className="button-arrow">→</span>
-                                    </button>
                                 </div>
                             </div>
                             
@@ -253,7 +249,7 @@ const Home = () => {
                                         Get Started Now
                                         <div className="cta-glow"></div>
                                     </button>
-                                    <button className="cta-secondary" onClick={() => navigate("/explore")}>
+                                    <button className="cta-secondary" onClick={() => navigate("/why-mindify")}>
                                         Learn More
                                     </button>
                                 </div>

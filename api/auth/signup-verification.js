@@ -10,13 +10,26 @@ const createEmailTransporter = () => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER.trim(),
-        pass: process.env.EMAIL_PASS.trim()
-      }
-    });
+    // Support any SMTP service - use EMAIL_HOST if provided, otherwise default to Gmail
+    const emailConfig = process.env.EMAIL_HOST
+      ? {
+          host: process.env.EMAIL_HOST,
+          port: process.env.EMAIL_PORT ? parseInt(process.env.EMAIL_PORT, 10) : 587,
+          secure: process.env.EMAIL_SECURE === 'true',
+          auth: {
+            user: process.env.EMAIL_USER.trim(),
+            pass: process.env.EMAIL_PASS.trim()
+          }
+        }
+      : {
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL_USER.trim(),
+            pass: process.env.EMAIL_PASS.trim()
+          }
+        };
+
+    const transporter = nodemailer.createTransport(emailConfig);
     
     transporter.verify((error, success) => {
       if (error) {
@@ -221,18 +234,18 @@ module.exports = async (req, res) => {
       }
 
       const mailOptions = {
-        from: `"THE GLITCH" <${process.env.EMAIL_USER.trim()}>`,
+        from: `"Mindify" <${process.env.EMAIL_USER.trim()}>`,
         to: emailLower,
-        subject: 'THE GLITCH - Email Verification Code',
+        subject: 'Mindify - Email Verification Code',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #0a0a1a; color: #ffffff;">
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #8B5CF6; font-size: 32px; margin: 0;">THE GLITCH</h1>
+              <h1 style="color: #8B5CF6; font-size: 32px; margin: 0;">MINDIFY</h1>
             </div>
             <div style="background-color: #1a0f2e; padding: 30px; border-radius: 10px; border: 1px solid #8B5CF6;">
               <h2 style="color: #8B5CF6; margin-top: 0;">Email Verification Required</h2>
               <p style="font-size: 16px; line-height: 1.6;">
-                Thank you for signing up for THE GLITCH! To complete your registration and verify your email address, please use the following verification code:
+                Thank you for signing up for Mindify! To complete your registration and verify your email address, please use the following verification code:
               </p>
               <div style="text-align: center; margin: 30px 0;">
                 <div style="display: inline-block; background-color: #251a3a; padding: 20px 40px; border-radius: 8px; border: 2px solid #8B5CF6;">
@@ -243,7 +256,7 @@ module.exports = async (req, res) => {
                 This code will expire in 10 minutes. If you didn't request this verification code, please ignore this email.
               </p>
               <p style="font-size: 14px; color: #cccccc; margin-top: 20px;">
-                Welcome to THE GLITCH - where wealth meets opportunity! 💰🚀
+                Welcome to Mindify! 🚀
               </p>
             </div>
           </div>

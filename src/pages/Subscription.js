@@ -5,7 +5,7 @@ import BinaryBackground from '../components/BinaryBackground';
 import axios from 'axios';
 import '../styles/Subscription.css';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://www.theglitch.world';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://mindify.app';
 const STRIPE_PAYMENT_LINK = process.env.REACT_APP_STRIPE_PAYMENT_LINK || 'https://buy.stripe.com/7sY00i9fefKA1oP0f7dIA0j';
 
 const Subscription = () => {
@@ -101,7 +101,7 @@ const Subscription = () => {
             console.error('Error sending contact message:', error);
             setContactStatus({ 
                 type: 'error', 
-                message: 'There was a problem sending your message. Please try again later or email us directly at support@theglitch.world' 
+                message: 'There was a problem sending your message. Please try again later or email us directly at support@mindify.app' 
             });
         } finally {
             setContactSubmitting(false);
@@ -225,7 +225,7 @@ const Subscription = () => {
             <div className="subscription-card">
                 <div className="subscription-header">
                     <h1>🔒 COMMUNITY ACCESS REQUIRED</h1>
-                    <p className="subscription-subtitle">Unlock the full THE GLITCH experience</p>
+                    <p className="subscription-subtitle">Unlock the full Mindify experience</p>
                 </div>
 
                 <div className="subscription-content">
@@ -306,7 +306,7 @@ const Subscription = () => {
                             {showContactForm ? 'Hide Contact Form' : 'Contact Support'}
                         </button>
                         <a 
-                            href="mailto:support@theglitch.world"
+                            href="mailto:support@mindify.app"
                             className="support-button"
                             style={{ textDecoration: 'none', display: 'inline-block', textAlign: 'center' }}
                         >
