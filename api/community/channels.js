@@ -241,7 +241,7 @@ module.exports = async (req, res) => {
     try {
       // Default channels (fallback)
       const defaultChannels = [
-        { id: 'welcome', name: 'welcome', displayName: 'Welcome', category: 'announcements', description: 'Welcome to THE GLITCH community!' },
+        { id: 'welcome', name: 'welcome', displayName: 'Welcome', category: 'announcements', description: 'Welcome to the Mindify community!' },
         { id: 'announcements', name: 'announcements', displayName: 'Announcements', category: 'announcements', description: 'Important announcements' },
         { id: 'general', name: 'general', displayName: 'General', category: 'general', description: 'General discussion' }
       ];
@@ -335,12 +335,9 @@ module.exports = async (req, res) => {
           
           // Always ensure required channels exist (create/update if needed)
           try {
-            // Fetch courses to create channels
-            const [courses] = await db.execute('SELECT * FROM courses');
-            
             // Insert default channels (welcome and announcements - everyone can see, only admins post)
             const defaultChannels = [
-              { id: 'welcome', name: 'welcome', category: 'announcements', description: 'Welcome to THE GLITCH community!', accessLevel: 'read-only' },
+              { id: 'welcome', name: 'welcome', category: 'announcements', description: 'Welcome to the Mindify community!', accessLevel: 'read-only' },
               { id: 'announcements', name: 'announcements', category: 'announcements', description: 'Important announcements', accessLevel: 'read-only' }
             ];
             
@@ -378,33 +375,7 @@ module.exports = async (req, res) => {
             // Insert admin channel (only admins can see and post)
             await safeInsertChannel('admin', 'admin', 'staff', 'Admin-only channel', 'admin-only');
             
-            // Create channels from courses (everyone can see and post)
-            if (courses && courses.length > 0) {
-              for (const course of courses) {
-                const courseId = `course-${course.id}`;
-                const courseName = (course.title || course.name || 'Unnamed Course').toLowerCase().replace(/\s+/g, '-');
-                const courseDisplayName = course.title || course.name || 'Unnamed Course';
-                await safeInsertChannel(courseId, courseName, 'courses', `Discussion for ${courseDisplayName}`, 'open');
-              }
-            }
-            
-            // Ensure all courses from defaultCourses are also in the database
-            const defaultCourses = [
-              { id: 1, title: "E-Commerce" },
-              { id: 2, title: "Health & Fitness" },
-              { id: 3, title: "Trading" },
-              { id: 4, title: "Real Estate" },
-              { id: 5, title: "Social Media" },
-              { id: 6, title: "Psychology and Mindset" },
-              { id: 7, title: "Algorithmic AI" },
-              { id: 8, title: "Crypto" }
-            ];
-            
-            for (const course of defaultCourses) {
-              const courseId = `course-${course.id}`;
-              const courseName = course.title.toLowerCase().replace(/\s+/g, '-');
-              await safeInsertChannel(courseId, courseName, 'courses', `Discussion for ${course.title}`, 'open');
-            }
+            // Courses feature removed - channels are now created manually via the UI
             
             // Add trading channels (everyone can see and post)
             const tradingChannels = [
@@ -496,7 +467,7 @@ module.exports = async (req, res) => {
         await ensureChannelsTable(db);
         await ensureChannelSchema(db);
 
-        // Check if description column exists, add it if it doesn't
+        // Check if required columns exist, add them if missing
         try {
           const [descColumns] = await db.execute(`
             SELECT COLUMN_NAME 
@@ -509,8 +480,39 @@ module.exports = async (req, res) => {
             console.log('Added description column to channels table');
           }
         } catch (alterError) {
-          // Column might already exist or other error, log and continue
           console.log('Note: description column check:', alterError.message);
+        }
+
+        // Check if is_system_channel column exists
+        try {
+          const [systemColumns] = await db.execute(`
+            SELECT COLUMN_NAME 
+            FROM INFORMATION_SCHEMA.COLUMNS 
+            WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'channels' AND COLUMN_NAME = 'is_system_channel'
+          `, [process.env.MYSQL_DATABASE]);
+          
+          if (systemColumns.length === 0) {
+            await db.execute('ALTER TABLE channels ADD COLUMN is_system_channel TINYINT(1) DEFAULT 0');
+            console.log('Added is_system_channel column to channels table');
+          }
+        } catch (alterError) {
+          console.log('Note: is_system_channel column check:', alterError.message);
+        }
+
+        // Check if hidden column exists
+        try {
+          const [hiddenColumns] = await db.execute(`
+            SELECT COLUMN_NAME 
+            FROM INFORMATION_SCHEMA.COLUMNS 
+            WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'channels' AND COLUMN_NAME = 'hidden'
+          `, [process.env.MYSQL_DATABASE]);
+          
+          if (hiddenColumns.length === 0) {
+            await db.execute('ALTER TABLE channels ADD COLUMN hidden TINYINT(1) DEFAULT 0');
+            console.log('Added hidden column to channels table');
+          }
+        } catch (alterError) {
+          console.log('Note: hidden column check:', alterError.message);
         }
 
         const slugBase = slugify(name || sourceName) || `channel-${Date.now()}`;
@@ -543,24 +545,36 @@ module.exports = async (req, res) => {
           });
         }
 
-        // Insert channel - both is_system_channel and hidden are bit(1) NOT NULL, so we must provide them
+        // Insert channel - handle different table schemas gracefully
+        const isSystemChannel = PROTECTED_CHANNEL_IDS.has(channelId) ? 1 : 0;
+        const hidden = 0;
+        
+        // Try full INSERT first (with all optional columns)
         try {
-          const isSystemChannel = PROTECTED_CHANNEL_IDS.has(channelId) ? 1 : 0; // bit(1) needs 0 or 1
-          const hidden = 0; // bit(1) NOT NULL - default to not hidden
-          
           await db.execute(
             'INSERT INTO channels (id, name, category, description, access_level, is_system_channel, hidden) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [channelId, channelName, channelCategory, channelDescription || null, channelAccess || 'open', isSystemChannel, hidden]
           );
         } catch (insertError) {
-          // If description column doesn't exist, insert without it
-          if (insertError.code === 'ER_BAD_FIELD_ERROR' && insertError.message.includes('description')) {
-            const isSystemChannel = PROTECTED_CHANNEL_IDS.has(channelId) ? 1 : 0;
-            const hidden = 0;
-        await db.execute(
-              'INSERT INTO channels (id, name, category, access_level, is_system_channel, hidden) VALUES (?, ?, ?, ?, ?, ?)',
-              [channelId, channelName, channelCategory, channelAccess || 'open', isSystemChannel, hidden]
-        );
+          // If error is about missing columns, try simpler INSERT
+          if (insertError.code === 'ER_BAD_FIELD_ERROR') {
+            try {
+              // Try without optional columns
+              await db.execute(
+                'INSERT INTO channels (id, name, category, access_level) VALUES (?, ?, ?, ?)',
+                [channelId, channelName, channelCategory, channelAccess || 'open']
+              );
+            } catch (simpleError) {
+              // If that also fails, try minimal INSERT
+              try {
+                await db.execute(
+                  'INSERT INTO channels (id, name) VALUES (?, ?)',
+                  [channelId, channelName]
+                );
+              } catch (minimalError) {
+                throw insertError; // Throw original error
+              }
+            }
           } else {
             throw insertError;
           }

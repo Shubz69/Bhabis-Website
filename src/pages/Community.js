@@ -58,7 +58,6 @@ const getCategoryIcon = (category) => {
     switch(category) {
         case 'announcements': return '📢';
         case 'staff': return '👨‍💼';
-        case 'courses': return '📚';
         case 'trading': return '📈';
         case 'general': return '💬';
         case 'support': return '🆘';
@@ -113,7 +112,6 @@ const Community = () => {
     
     // Welcome message and channel visibility
     const [hasReadWelcome, setHasReadWelcome] = useState(false);
-    const [courses, setCourses] = useState([]);
     const [subscriptionStatus, setSubscriptionStatus] = useState(null);
     const [paymentFailed, setPaymentFailed] = useState(false);
     const [showChannelManager, setShowChannelManager] = useState(false);
@@ -131,7 +129,6 @@ const Community = () => {
     const categoryOrder = useMemo(() => ([
         'announcements',
         'staff',
-        'courses',
         'trading',
         'general',
         'support',
@@ -249,21 +246,7 @@ const Community = () => {
             });
         } else if (channelListRef.current.length > 0) {
             preparedChannels = channelListRef.current;
-        } else if (courses && courses.length > 0) {
-            const courseChannels = courses.map((course, index) => {
-                const courseTitle = course.title || course.name || `Course ${index + 1}`;
-                const slug = courseTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-                return {
-                    id: `course-${course.id || index}`,
-                    name: slug,
-                    displayName: courseTitle,
-                    description: `${courseTitle} course channel`,
-                    accessLevel: 'open',
-                    category: 'courses',
-                    locked: false
-                };
-            });
-
+        } else {
             const essentialChannels = [
                 { id: 'welcome', name: 'welcome', displayName: 'Welcome', category: 'announcements', description: 'Welcome to the Mindify community!', accessLevel: 'open', locked: false },
                 { id: 'announcements', name: 'announcements', displayName: 'Announcements', category: 'announcements', description: 'Important platform announcements', accessLevel: 'admin-only', locked: true },
@@ -306,7 +289,7 @@ const Community = () => {
         }
 
         return sortedChannels;
-    }, [isAuthenticated, courses, sortChannels, channelIdParam]);
+    }, [isAuthenticated, sortChannels, channelIdParam]);
     
     // Initialize WebSocket connection for real-time messaging
     const enableRealtime = useMemo(() => {
@@ -464,15 +447,9 @@ const Community = () => {
         return 'free';
     };
 
-    // Get user's courses
-    const getUserCourses = () => {
-        return storedUser?.courses || [];
-    };
-
     // Check if user can access channel
     const canUserAccessChannel = (channel) => {
         const userRole = getCurrentUserRole();
-        const userCourses = getUserCourses();
         
         // Admins and Super Admins can access everything
         if (userRole === 'admin' || userRole === 'super_admin' || isAdminUser || isSuperAdminUser) {
@@ -494,10 +471,6 @@ const Community = () => {
         
         if (channel.accessLevel === 'level') {
             return userLevel >= (channel.minLevel || 0);
-        }
-        
-        if (channel.accessLevel === 'course') {
-            return userCourses.some(course => course.id === channel.courseId);
         }
         
         return true;
@@ -725,23 +698,7 @@ const Community = () => {
         setHasReadWelcome(readStatus);
     }, []);
 
-    // Fetch courses for channel naming
-    useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const response = await Api.getCourses();
-                if (response && response.data && Array.isArray(response.data)) {
-                    setCourses(response.data);
-                }
-            } catch (error) {
-                console.error('Failed to fetch courses:', error);
-            }
-        };
-        
-        if (isAuthenticated) {
-            fetchCourses();
-        }
-    }, [isAuthenticated]);
+    // Courses feature removed - channels are now created manually
 
     // Check subscription status from localStorage (fallback)
     const checkSubscriptionLocal = useCallback(() => {
@@ -2339,7 +2296,6 @@ Let's build generational wealth together! 💰🚀`,
                                         }}
                                     >
                                         <option value="trading">Trading</option>
-                                        <option value="courses">Courses</option>
                                         <option value="general">General</option>
                                         <option value="support">Support</option>
                                         <option value="premium">Premium</option>
