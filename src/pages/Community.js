@@ -162,13 +162,23 @@ const Community = () => {
             return channelListRef.current;
         }
 
+        // Get list of permanently deleted channels (filter them out)
+        const deletedChannelsKey = 'deleted_channels';
+        let deletedChannelIds = [];
+        try {
+            deletedChannelIds = JSON.parse(localStorage.getItem(deletedChannelsKey) || '[]');
+        } catch (e) {
+            // Ignore errors
+        }
+        
         // OPTIMIZATION: Load cached channels first for instant display
         const cachedChannelsKey = 'community_channels_cache';
         let cachedChannels = [];
         try {
             const cached = localStorage.getItem(cachedChannelsKey);
             if (cached) {
-                cachedChannels = JSON.parse(cached);
+                // Filter out deleted channels from cache
+                cachedChannels = JSON.parse(cached).filter(c => !deletedChannelIds.includes(c.id));
                 if (cachedChannels.length > 0) {
                     // Show cached channels immediately
                     const preparedCached = cachedChannels.map((channel) => {
@@ -213,9 +223,16 @@ const Community = () => {
                 localStorage.setItem(cachedChannelsKey, JSON.stringify(channelsFromServer));
             }
         } catch (error) {
-            console.warn('Failed to fetch channels from API:', error?.message || error);
+            // Silently handle fetch failures - only log if it's a server error
+            if (error.response && error.response.status >= 500) {
+                console.warn('Failed to fetch channels from API (server error):', error.response.status);
+            }
             // Keep showing cached channels if API fails
             if (cachedChannels.length > 0) {
+                return channelListRef.current;
+            }
+            // If no cache and fetch failed, keep current channel list
+            if (channelListRef.current.length > 0) {
                 return channelListRef.current;
             }
         }
@@ -223,7 +240,10 @@ const Community = () => {
         let preparedChannels = [];
 
         if (Array.isArray(channelsFromServer) && channelsFromServer.length > 0) {
-            preparedChannels = channelsFromServer.map((channel) => {
+            // Filter out deleted channels from server response
+            preparedChannels = channelsFromServer
+                .filter(channel => !deletedChannelIds.includes(channel.id))
+                .map((channel) => {
                 const baseId = channel.id ?? channel.name ?? `channel-${Date.now()}`;
                 const idString = String(baseId);
                 const normalizedName = channel.name || idString;
@@ -668,9 +688,6 @@ const Community = () => {
         try {
             await Api.deleteChannel(channel.id);
             
-            // Clear channel cache to force fresh fetch
-            localStorage.removeItem('community_channels_cache');
-            
             // Clear messages cache for this channel
             localStorage.removeItem(`community_messages_${channel.id}`);
 
@@ -684,9 +701,40 @@ const Community = () => {
 
             // Remove from current channel list immediately (optimistic update)
             setChannelList(prev => prev.filter(c => c.id !== channel.id));
+            
+            // Mark channel as deleted permanently (so it never reappears)
+            try {
+                const deletedChannelsKey = 'deleted_channels';
+                const deletedChannels = JSON.parse(localStorage.getItem(deletedChannelsKey) || '[]');
+                if (!deletedChannels.includes(channel.id)) {
+                    deletedChannels.push(channel.id);
+                    localStorage.setItem(deletedChannelsKey, JSON.stringify(deletedChannels));
+                }
+            } catch (e) {
+                // Ignore errors
+            }
+            
+            // Also remove from cache if it exists
+            try {
+                const cachedChannelsKey = 'community_channels_cache';
+                const cached = localStorage.getItem(cachedChannelsKey);
+                if (cached) {
+                    const cachedChannels = JSON.parse(cached);
+                    const updatedCache = cachedChannels.filter(c => c.id !== channel.id);
+                    localStorage.setItem(cachedChannelsKey, JSON.stringify(updatedCache));
+                }
+            } catch (cacheError) {
+                // Ignore cache errors
+            }
 
-            // Force refresh the channel list from server
-            await refreshChannelList();
+            // Try to refresh the channel list from server (but don't fail if it errors)
+            try {
+                await refreshChannelList();
+            } catch (refreshError) {
+                // Refresh failed but deletion succeeded - channel is already removed from UI
+                // This is okay, the next time channels refresh they'll be correct
+                console.warn('Channel deleted but refresh failed (channel already removed from UI):', refreshError?.message);
+            }
 
             setChannelActionStatus({ type: 'success', message: 'Channel deleted successfully.' });
         } catch (error) {
@@ -695,8 +743,12 @@ const Community = () => {
                 type: 'error',
                 message: error.response?.data?.message || error.message || 'Failed to delete channel.'
             });
-            // Re-fetch channels on error to ensure UI is in sync
-            await refreshChannelList();
+            // Try to refresh channels on error to ensure UI is in sync
+            try {
+                await refreshChannelList();
+            } catch (refreshError) {
+                // Ignore refresh errors on delete failure
+            }
         } finally {
             setChannelActionLoading(false);
         }

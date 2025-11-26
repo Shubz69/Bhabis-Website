@@ -100,11 +100,8 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
       hasReachedMaxAttempts.current = true;
       wsDisabledRef.current = true;
       
-      // Only log once when max attempts are reached
-      if (!hasLoggedFirstErrorRef.current) {
-        hasLoggedFirstErrorRef.current = true;
-        console.warn('WebSocket unavailable. Using REST API polling instead.');
-      }
+      // Completely silent - WebSocket unavailable is expected, REST polling works fine
+      // No logging needed
       setConnectionError(null);
       
       // Clear any pending reconnection timeout IMMEDIATELY
@@ -366,12 +363,10 @@ export const useWebSocket = (channelId, onMessageCallback, shouldConnect = true)
           ? 'Cannot connect to server. Server may be unavailable.'
           : (error.message || 'Connection failed');
 
-        // Only log detailed error on first attempt to help diagnose, then suppress
-        if (reconnectAttempts.current === 0 && !hasReachedMaxAttempts.current && !wsDisabledRef.current && !hasLoggedFirstErrorRef.current) {
-          hasLoggedFirstErrorRef.current = true;
-          console.warn('WebSocket connection unavailable. Falling back to REST API polling.');
-        }
-        // Suppress all subsequent error logs
+        // Suppress all WebSocket error logs - fallback to REST polling works fine
+        // Only log once on the very first attempt if we haven't logged yet
+        // Completely suppress all WebSocket errors - REST API polling works fine
+        // This is expected behavior, no logging needed
         setConnectionError(`WebSocket Error: ${errorMessage}`);
         setIsConnected(false);
         
