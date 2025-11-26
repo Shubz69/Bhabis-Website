@@ -1101,8 +1101,8 @@ Welcome to the most elite trading and wealth-building community on the planet! W
 
 **5. Course Access**
    • Course-specific channels are for enrolled members only
-   • Share insights and ask questions related to your enrolled courses
-   • Complete courses in order for maximum learning effectiveness
+   • Share insights and ask questions in any channel
+   • Engage with the community to build knowledge together
 
 **6. Community Support**
    • Help fellow members when you can
@@ -1119,7 +1119,7 @@ Welcome to the most elite trading and wealth-building community on the planet! W
 1. **Complete your profile** - Add your avatar and bio
 2. **Explore channels** - Check out different course and trading channels
 3. **Join discussions** - Start participating in conversations
-4. **Enroll in courses** - Begin your wealth-building journey
+4. **Create or join channels** - Start conversations and connect with others
 5. **Earn XP** - Level up by being active in the community
 
 ## 💎 **PREMIUM BENEFITS**
@@ -1440,7 +1440,7 @@ Let's build generational wealth together! 💰🚀`,
         }
         
         // Everyone can see welcome and announcements (they're read-only for non-admins)
-        // Everyone can see all other channels (courses, trading, etc.)
+        // Everyone can see all other channels
         // No filtering needed for subscribed users - they see everything except admin channel
         
         // Only filter admin channel for non-admins
