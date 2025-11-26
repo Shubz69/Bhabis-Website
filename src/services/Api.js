@@ -429,18 +429,7 @@ const Api = {
         });
     },
 
-    getUserCourses: (userId) => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            return Promise.reject(new Error('Authentication required'));
-        }
-        return axios.get(`${API_BASE_URL}/api/users/${userId}/courses`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json'
-            }
-        });
-    },
+    // getUserCourses removed - courses feature no longer used
 
     getLeaderboard: (timeframe = 'all-time') => {
         return axios.get(`${API_BASE_URL}/api/leaderboard`, {

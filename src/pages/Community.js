@@ -1092,7 +1092,7 @@ Welcome to the most elite trading and wealth-building community on the planet! W
 **3. Content & Privacy**
    • Keep conversations relevant to trading, wealth-building, and course topics
    • Do not share personal financial information (account numbers, passwords, etc.)
-   • Respect intellectual property - do not share copyrighted course materials
+   • Respect intellectual property - do not share copyrighted materials
 
 **4. Spam & Promotion**
    • No spam, self-promotion, or affiliate links without permission
@@ -1117,7 +1117,7 @@ Welcome to the most elite trading and wealth-building community on the planet! W
 ## 🚀 **GETTING STARTED**
 
 1. **Complete your profile** - Add your avatar and bio
-2. **Explore channels** - Check out different course and trading channels
+2. **Explore channels** - Check out different community channels
 3. **Join discussions** - Start participating in conversations
 4. **Create or join channels** - Start conversations and connect with others
 5. **Earn XP** - Level up by being active in the community
