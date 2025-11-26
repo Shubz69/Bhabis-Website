@@ -191,11 +191,14 @@ const Community = () => {
                             locked: channel.locked ?? accessLevelValue === 'admin-only'
                         };
                     });
-                    setChannelList(sortChannels(preparedCached));
+                            setChannelList(sortChannels(preparedCached));
+                        }
+                    }
+                } catch (cacheError) {
+                    console.warn('Error loading cached channels:', cacheError);
                 }
             }
-        } catch (cacheError) {
-            console.warn('Error loading cached channels:', cacheError);
+        }
         }
 
         let channelsFromServer = [];
@@ -667,12 +670,26 @@ const Community = () => {
 
         try {
             await Api.deleteChannel(channel.id);
-            await refreshChannelList();
+            
+            // Clear channel cache to force fresh fetch
+            localStorage.removeItem('community_channels_cache');
+            
+            // Clear messages cache for this channel
             localStorage.removeItem(`community_messages_${channel.id}`);
 
-            if (selectedChannel?.id === channel.id) {
+            // If this channel was selected, clear selection and navigate to welcome
+            const wasSelected = selectedChannel?.id === channel.id;
+            if (wasSelected) {
+                setSelectedChannel(null);
                 setMessages([]);
+                navigate('/community/welcome');
             }
+
+            // Remove from current channel list immediately (optimistic update)
+            setChannelList(prev => prev.filter(c => c.id !== channel.id));
+
+            // Force refresh the channel list from server (bypass cache)
+            await refreshChannelList({ forceRefresh: true });
 
             setChannelActionStatus({ type: 'success', message: 'Channel deleted successfully.' });
         } catch (error) {
@@ -681,6 +698,8 @@ const Community = () => {
                 type: 'error',
                 message: error.response?.data?.message || error.message || 'Failed to delete channel.'
             });
+            // Re-fetch channels on error to ensure UI is in sync
+            await refreshChannelList();
         } finally {
             setChannelActionLoading(false);
         }
